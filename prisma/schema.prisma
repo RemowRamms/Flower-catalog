@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("postgresql://postgres:Password123@localhost:5432/flower_catalog")
+  url      = env("DATABASE_URL")
 }
 
 // USERS

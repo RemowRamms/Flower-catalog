@@ -4,7 +4,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // USERS
@@ -64,7 +63,7 @@ model OrderItem {
   quantity  Int
   price     Decimal @db.Decimal(10, 2)
 
-  orderId   Int
+  orderId   Int     @unique
   order     Order   @relation(fields: [orderId], references: [id])
 
   productId Int
@@ -79,6 +78,6 @@ model Payment {
   status    String    @default("pending")
   createdAt DateTime  @default(now())
 
-  orderId   Int
+  orderId   Int       @unique
   order     Order     @relation(fields: [orderId], references: [id])
 }

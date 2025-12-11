@@ -18,7 +18,7 @@ import { RestApiHandler } from '@zenstackhq/server/api';
 const prisma = new PrismaClient();
 
 // Load OpenAPI specification
-const openapiSpec = JSON.parse(readFileSync('./openapi.json', 'utf-8'));
+const openapiSpec = JSON.parse(readFileSync('./dist/openapi.json', 'utf-8'));
 
 const REST_API = express.Router();
 

@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+plugin openapi {
+  provider = "@zenstackhq/openapi"
+  output   = "./openapi.json"      
+  title    = "Flower Catalog API"
+  version  = "1.0.0"
+  flavor   = "rest"                 
+  prefix   = "/api/v2"
+  description = "Flower Catalog API"
+}
+
+
+// USERS
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("customer")
+  createdAt DateTime @default(now())
+
+  orders    Order[]
+
+  @@allow('all', true)
+}
+
+// CATEGORIES
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String
+  createdAt DateTime  @default(now())
+
+  products  Product[]
+
+  @@allow('all', true)
+}
+
+// PRODUCTS
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  price       Decimal    @db.Decimal(10, 2)
+  stock       Int
+  imageUrl    String?
+  createdAt   DateTime   @default(now())
+
+  categoryId  Int
+  category    Category   @relation(fields: [categoryId], references: [id])
+
+  orderItems  OrderItem[]
+
+  @@allow('all', true)
+}
+
+// ORDERS
+model Order {
+  id          Int        @id @default(autoincrement())
+  totalAmount Decimal     @db.Decimal(10, 2)
+  status      String      @default("pending")
+  createdAt   DateTime    @default(now())
+
+  userId      Int
+  user        User        @relation(fields: [userId], references: [id])
+
+  items       OrderItem[]
+  payment     Payment?
+
+  @@allow('all', true)
+}
+
+// ORDER ITEMS
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+
+  orderId   Int   
+  order     Order   @relation(fields: [orderId], references: [id])
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  @@allow('all', true)
+}
+
+// PAYMENTS
+model Payment {
+  id        Int      @id @default(autoincrement())
+  amount    Decimal   @db.Decimal(10, 2)
+  method    String
+  status    String    @default("pending")
+  createdAt DateTime  @default(now())
+
+  orderId   Int       @unique
+  order     Order     @relation(fields: [orderId], references: [id])
+
+  @@allow('all', true)
+}

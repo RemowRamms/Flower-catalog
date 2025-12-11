@@ -7,8 +7,7 @@ import helmet from 'helmet';
 import logger from 'morgan';
 import swaggerUi from 'swagger-ui-express';
 import { readFileSync } from 'fs';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import { join } from 'path';
 import * as routes from './routes';
 import { enhance } from '@zenstackhq/runtime';
 import { PrismaClient } from '@prisma/client';
@@ -17,8 +16,8 @@ import { RestApiHandler } from '@zenstackhq/server/api';
 
 const prisma = new PrismaClient();
 
-// Load OpenAPI specification
-const openapiSpec = JSON.parse(readFileSync('./dist/openapi.json', 'utf-8'));
+// Load OpenAPI specification from src folder
+const openapiSpec = JSON.parse(readFileSync(join(__dirname, 'openapi.json'), 'utf-8'));
 
 const REST_API = express.Router();
 

@@ -21,7 +21,7 @@ const openapiSpec = JSON.parse(readFileSync(join(__dirname, 'openapi.json'), 'ut
 
 const REST_API = express.Router();
 
-REST_API.use(express.json());
+REST_API.use(express.json({ type: ['application/json', 'application/vnd.api+json'] }));
 REST_API.use(cors());
 
 REST_API.use(
